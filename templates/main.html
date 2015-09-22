@@ -1,13 +1,13 @@
 $def with (polls)
 
 <aside>
-	<p><a src="create/">Make a new poll</a></p>
+	<p><a href="create/">Make a new poll</a></p>
 </aside>
 
 <div class="poll-list">
 $for poll in polls:
 	<article>
-		<h1><a src="view/$poll.qid">$poll.question</a></h1>
-		<p>Created on: $datestr(poll.madeOn)</p>
+		<h1><a href="view/$poll.qid">$poll.question</a></h1>
+		<p>Created on: $poll.madeOn</p>
 	</article>
 </div>

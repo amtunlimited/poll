@@ -9,7 +9,7 @@ Written by: Aaron Tagliaboschi <aaron.tagliaboschi@gmail.com>
 #	create: make a new poll
 #	view: A more detailed view of a particular poll
 
-import web
+import web, datetime
 
 #This decides what class to use based on regular expressions
 urls = (
@@ -21,11 +21,15 @@ urls = (
 t_globals = {
     'datestr': web.datestr
 }
+
 render = web.template.render('templates', base='base', globals=t_globals)
+
+db = web.database(dbn='sqlite', db='poll.db')
 
 class main:
 	def GET(self):
-		return "main"
+		polls = db.select('questions', order='qid DESC')
+		return render.main(polls)
 
 class create:
 	def GET(self):
@@ -33,7 +37,12 @@ class create:
 
 class view:
 	def GET(self, qid):
-		return "view " + qid
+		title = db.select('questions', dict(quid=qid), where='qid = $quid')[0].question
+		options = db.select('options', dict(quid=qid), where='qid = $quid')
+		
+		return render.view(title, options)
+			
+			
 
 if __name__ == "__main__":
     app = web.application(urls, globals())

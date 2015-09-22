@@ -6,7 +6,7 @@ CREATE TABLE questions (
 
 CREATE TABLE options (
     oid INTEGER PRIMARY KEY ASC,
-    qid INTEGER
+    qid INTEGER,
     option TEXT
 );
 

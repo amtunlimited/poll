@@ -1,1 +1,14 @@
-<
+$def with (question, options)
+
+<h1>$question</h1>
+
+options:
+<form action="" method="post">
+	<ul>
+		$for option in options:
+			<li style="list-style-type:none">
+				<input type="radio" name="opt" value="$option.oid" />
+				<label>$option.option</label>
+			</li>
+	</ul>
+</form>

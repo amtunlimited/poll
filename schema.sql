@@ -1,19 +1,16 @@
 CREATE TABLE questions (
-    qid INT AUTO_INCREMENT,
+    qid INTEGER PRIMARY KEY AUTOINCREMENT,
     question TEXT,
-    madeOn DATETIME,
-    primary key (qid)
+    madeOn INTERGER default CURRENT_TIMESTAMP
 );
 
 CREATE TABLE options (
-    oid INT AUTO_INCREMENT,
-    option TEXT,
-    primary key (oid)
+    oid INTERGER PRIMARY KEY ASC,
+    option TEXT
 );
 
 CREATE TABLE vote (
-    vid INT AUTO_INCREMENT,
-    oid INT,
-    voteDate DATETIME,
-    primary key (vid)
+    vid INTERGER PRIMARY KEY ASC,
+    oid INTERGER,
+    voteDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

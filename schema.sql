@@ -5,12 +5,13 @@ CREATE TABLE questions (
 );
 
 CREATE TABLE options (
-    oid INTERGER PRIMARY KEY ASC,
+    oid INTEGER PRIMARY KEY ASC,
+    qid INTEGER
     option TEXT
 );
 
 CREATE TABLE vote (
-    vid INTERGER PRIMARY KEY ASC,
-    oid INTERGER,
+    vid INTEGER PRIMARY KEY ASC,
+    oid INTEGER,
     voteDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

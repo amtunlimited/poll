@@ -1,13 +1,12 @@
 #!/usr/bin/python
 
-'''index.py: The Web.py controller for a simple poll application.
+'''model.py: The Web.py controller for a simple poll application.
 Written by: Aaron Tagliaboschi <aaron.tagliaboschi@gmail.com>
 '''
 
 #A view list:
 #	main: Lists out current polls
 #	create: make a new poll
-#	vote: vote on a poll
 #	view: A more detailed view of a particular poll
 
 import web
@@ -16,9 +15,13 @@ import web
 urls = (
 	'/poll/','main',
 	'/poll/create/', 'create',
-	'/poll/vote/(.*)', 'vote',
 	'/poll/view/(.*)', 'view'
 )
+
+t_globals = {
+    'datestr': web.datestr
+}
+render = web.template.render('templates', base='base', globals=t_globals)
 
 class main:
 	def GET(self):
@@ -27,10 +30,6 @@ class main:
 class create:
 	def GET(self):
 		return "create"
-
-class vote:
-	def GET(self, qid):
-		return "vote " + qid
 
 class view:
 	def GET(self, qid):

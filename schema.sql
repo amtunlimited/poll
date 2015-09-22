@@ -2,7 +2,6 @@ CREATE TABLE questions (
     qid INT AUTO_INCREMENT,
     question TEXT,
     madeOn DATETIME,
-    expire DATETIME,
     primary key (qid)
 );
 

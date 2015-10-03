@@ -18,12 +18,11 @@ urls = (
 	'/poll/view/(.*)', 'view'
 )
 
-t_globals = {
-    'datestr': web.datestr
-}
-
-render = web.template.render('templates', base='base', globals=t_globals)
-
+#These are variables tat will be used in every class.
+#Render uses the templating language "Templator" to make templates.
+render = web.template.render('templates', base='base')
+#This makes a connection to the database. Here I'm using SQLite because I didn't
+#feel like setting up MySQL on my server. Maybe later...
 db = web.database(dbn='sqlite', db='poll.db')
 
 class main:
@@ -37,12 +36,24 @@ class create:
 
 class view:
 	def GET(self, qid):
-		title = db.select('questions', dict(quid=qid), where='qid = $quid')[0].question
+		title = db.select('questions', dict(quid=qid), where='qid = $quid')[0]
 		options = db.select('options', dict(quid=qid), where='qid = $quid')
+		count = db.query(
+			'SELECT options.option AS option, count(vote.vid) AS count \
+			FROM vote JOIN options \
+			WHERE options.oid=vote.oid AND qid = $quid \
+			GROUP BY vote.oid', 
+			vars={'quid':qid}
+		)
 		
-		return render.view(title, options)
-			
-			
+		return render.view(title, count, options)
+		#return count
+		
+	def POST(self, qid):
+		data = web.input()
+		db.insert('vote', oid=data.oid)
+		
+		raise web.seeother("/poll/view/" + qid)
 
 if __name__ == "__main__":
     app = web.application(urls, globals())

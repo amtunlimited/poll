@@ -1,2 +1,2 @@
-# poll
+# Poll
 A simple poll system

@@ -1,14 +1,20 @@
-$def with (question, options)
+$def with (question, count, options)
 
-<h1>$question</h1>
+<h1>$question.question</h1>
 
-options:
-<form action="" method="post">
-	<ul>
+<table>
+	$for option in count:
+		<tr>
+			<td>$option.option</td>
+			<td>$option.count</td>
+		</tr>
+</table>
+
+<form id="form" action="/poll/view/$question.qid" method="post">
+	<select name="oid">
 		$for option in options:
-			<li style="list-style-type:none">
-				<input type="radio" name="opt" value="$option.oid" />
-				<label>$option.option</label>
-			</li>
-	</ul>
+			<option value="$option.oid">$option.option</option>
+	</select>
+	<input type="hidden" name="qid" value="$question.qid" />
+	<input type="submit"/>
 </form>

@@ -32,7 +32,17 @@ class main:
 
 class create:
 	def GET(self):
-		return "create"
+		return render.create()
+		
+	def POST(self):
+		data = web.input(option=[])
+		#Do some database stuff
+		db.insert('questions', question=data.title)
+		quid = db.select('questions', order='madeOn DESC')[0].qid
+		for opttext in filter(None, data.option):
+			db.insert('options', qid=quid, option=opttext)
+		
+		raise web.seeother("/poll/view/" + str(quid))
 
 class view:
 	def GET(self, qid):
@@ -40,9 +50,9 @@ class view:
 		options = db.select('options', dict(quid=qid), where='qid = $quid')
 		count = db.query(
 			'SELECT options.option AS option, count(vote.vid) AS count \
-			FROM vote JOIN options \
-			WHERE options.oid=vote.oid AND qid = $quid \
-			GROUP BY vote.oid', 
+				FROM vote JOIN options \
+				WHERE options.oid=vote.oid AND qid = $quid \
+				GROUP BY vote.oid', 
 			vars={'quid':qid}
 		)
 		

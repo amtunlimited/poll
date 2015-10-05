@@ -1,6 +1,37 @@
-$def with (form)
-
 <h1>New Poll</h1>
+
 <form action="" method="post">
-$:form.render()
+	<b>Title:</b> <input name="title" /><br />
+	
+	<b>Options:</b>
+	<div id="optlist"></div><br/>
+	<a href="#" id="addnew">Add another option</a><br />
+	<input type="submit" />
 </form>
+
+<script>
+	document.getElementById("addnew").onclick = function() {
+		var parent = document.getElementById("optlist");
+		
+		var div = document.createElement("div")
+		
+		var text = document.createElement("input")
+		text.name = "option";
+		
+		var remove = document.createElement("a");
+		remove.href = "#";
+		remove.appendChild(document.createTextNode("Remove"))
+		remove.onclick = function() {
+			parent.removeChild(div);
+			return false;
+		}
+		
+		div.appendChild(text);
+		div.appendChild(remove);
+		div.appendChild(document.createElement("br"));
+		
+		parent.appendChild(div);
+		
+		return false;
+	}
+</script>

@@ -48,11 +48,13 @@ class view:
 	def GET(self, qid):
 		title = db.select('questions', dict(quid=qid), where='qid = $quid')[0]
 		options = db.select('options', dict(quid=qid), where='qid = $quid')
+		#Left join is used here to include 0 counts
 		count = db.query(
 			'SELECT options.option AS option, count(vote.vid) AS count \
-				FROM vote JOIN options \
-				WHERE options.oid=vote.oid AND qid = $quid \
-				GROUP BY vote.oid', 
+				FROM options LEFT JOIN vote \
+				ON options.oid=vote.oid \
+				WHERE qid = $quid \
+				GROUP BY options.oid', 
 			vars={'quid':qid}
 		)
 		

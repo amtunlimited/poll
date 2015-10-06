@@ -18,7 +18,7 @@ urls = (
 	'/poll/view/(.*)', 'view'
 )
 
-#These are variables tat will be used in every class.
+#These are variables that will be used in every class.
 #Render uses the templating language "Templator" to make templates.
 render = web.template.render('templates', base='base')
 #This makes a connection to the database. Here I'm using SQLite because I didn't
@@ -26,17 +26,22 @@ render = web.template.render('templates', base='base')
 db = web.database(dbn='sqlite', db='poll.db')
 
 class main:
+	#Pretty simple, just, just get the polls and display them
 	def GET(self):
 		polls = db.select('questions', order='qid DESC')
 		return render.main(polls)
 
 class create:
+	#Slightly more interesting...
 	def GET(self):
 		return render.create()
-		
+	
+	#This is triggered when the form sents and the HTTP request is "POST". This
+	#Takes all of the inputs, puts them into the database, and redirects to the
+	#question just made.
 	def POST(self):
 		data = web.input(option=[])
-		#Do some database stuff
+		
 		db.insert('questions', question=data.title)
 		quid = db.select('questions', order='madeOn DESC')[0].qid
 		for opttext in filter(None, data.option):
@@ -45,9 +50,11 @@ class create:
 		raise web.seeother("/poll/view/" + str(quid))
 
 class view:
+	#The most complex one.
 	def GET(self, qid):
 		title = db.select('questions', dict(quid=qid), where='qid = $quid')[0]
 		options = db.select('options', dict(quid=qid), where='qid = $quid')
+		#This is a full query because I needed to get a joined table.
 		#Left join is used here to include 0 counts
 		count = db.query(
 			'SELECT options.option AS option, count(vote.vid) AS count \
@@ -59,7 +66,6 @@ class view:
 		)
 		
 		return render.view(title, count, options)
-		#return count
 		
 	def POST(self, qid):
 		data = web.input()
